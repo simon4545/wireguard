@@ -85,7 +85,7 @@ EOF
     
     sudo wg-quick up wg0
     
-		port_forward
+    # port_forward
 
     content=$(cat /etc/wireguard/client.conf)
     echo -e "\033[43;42m电脑端请下载/etc/wireguard/client.conf\033[0m"
