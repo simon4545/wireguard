@@ -27,6 +27,7 @@ wireguard_install(){
     serverip=$(curl ipv4.icanhazip.com)
     port=16000
     eth=$(ls /sys/class/net | awk '/^e/{print}')
+    interfaceip=$(ifconfig $eth | awk -F ' *|:' '/inet /{print $3}')
 
 sudo cat > /etc/wireguard/wg0.conf <<-EOF
 [Interface]
@@ -93,9 +94,9 @@ EOF
 
 port_forward(){
 	# 设置端口转发
-	iptables -t nat -I PREROUTING -d 127.0.0.1 -p tcp -m multiport ! --dports 22,16000 -j DNAT --to-destination 10.0.0.2
-	iptables -t nat -I PREROUTING -d 127.0.0.1 -p udp -m multiport ! --dports 22,16000 -j DNAT --to-destination 10.0.0.2
-	iptables -t nat -I POSTROUTING -s 10.0.0.2 -j SNAT --to-source 127.0.0.1
+	iptables -t nat -I PREROUTING -d $interfaceip -p tcp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
+	iptables -t nat -I PREROUTING -d $interfaceip -p udp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
+	iptables -t nat -I POSTROUTING -s 10.0.0.2 -j SNAT --to-source $interfaceip
 }
 
 wireguard_install
