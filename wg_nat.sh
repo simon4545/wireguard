@@ -1,5 +1,13 @@
 #!/bin/bash
+
+wireguard_remove(){
+    sudo wg-quick down wg0
+    sudo apt-get remove -y wireguard
+    sudo rm -rf /etc/wireguard
+}
+
 wireguard_install(){
+    wireguard_remove
     version=$(cat /etc/os-release | awk -F '[".]' '$1=="VERSION="{print $2}')
     if [ $version == 18 ]; then
         sudo apt-get update -y
