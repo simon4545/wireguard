@@ -105,6 +105,7 @@ port_forward(){
 	iptables -t nat -I PREROUTING -d $interfaceip -p tcp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
 	iptables -t nat -I PREROUTING -d $interfaceip -p udp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
 	iptables -t nat -I POSTROUTING -s 10.0.0.2 -j SNAT --to-source $interfaceip
+	service iptables save
 }
 
 wireguard_install
