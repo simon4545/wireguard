@@ -1,10 +1,6 @@
 #!/bin/bash
 
-wireguard_remove(){
-    sudo wg-quick down wg0
-    sudo apt-get remove -y wireguard
-    sudo rm -rf /etc/wireguard
-}
+
 
 wireguard_install(){
     wireguard_remove
@@ -19,7 +15,7 @@ wireguard_install(){
     fi
     #sudo add-apt-repository -y ppa:wireguard/wireguard
     sudo apt-get update -y
-    sudo apt-get install -y wireguard curl
+    sudo apt-get install -y wireguard curl iptables
     sudo apt-get install -y resolvconf
     
     sudo echo net.ipv4.ip_forward = 1 >> /etc/sysctl.conf
@@ -100,7 +96,11 @@ EOF
     echo -e "\033[43;42m电脑端请下载/etc/wireguard/client.conf\033[0m"
     echo "${content}"
 }
-
+wireguard_remove(){
+    sudo wg-quick down wg0
+    sudo apt-get remove -y wireguard
+    sudo rm -rf /etc/wireguard
+}
 port_forward(){
 	# 设置端口转发
 	sudo iptables -t nat -I PREROUTING -d $interfaceip -p tcp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
