@@ -17,10 +17,11 @@ wireguard_install(){
      #   sudo apt-get update -y
       #  sudo apt-get install -y software-properties-common
     fi
-    sudo add-apt-repository -y ppa:wireguard/wireguard
+    #sudo add-apt-repository -y ppa:wireguard/wireguard
     sudo apt-get update -y
     sudo apt-get install -y wireguard curl
-
+    sudo apt-get install -y resolvconf
+    
     sudo echo net.ipv4.ip_forward = 1 >> /etc/sysctl.conf
     sysctl -p
     echo "1"> /proc/sys/net/ipv4/ip_forward
@@ -67,7 +68,7 @@ AllowedIPs = 0.0.0.0/0, ::0/0
 PersistentKeepalive = 25
 EOF
 
-    sudo apt-get install -y qrencode
+    
 
 sudo cat > /etc/init.d/wgstart <<-EOF
 #! /bin/bash
@@ -102,10 +103,10 @@ EOF
 
 port_forward(){
 	# 设置端口转发
-	iptables -t nat -I PREROUTING -d $interfaceip -p tcp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
-	iptables -t nat -I PREROUTING -d $interfaceip -p udp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
-	iptables -t nat -I POSTROUTING -s 10.0.0.2 -j SNAT --to-source $interfaceip
-	service iptables save
+	sudo iptables -t nat -I PREROUTING -d $interfaceip -p tcp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
+	sudo iptables -t nat -I PREROUTING -d $interfaceip -p udp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
+	sudo iptables -t nat -I POSTROUTING -s 10.0.0.2 -j SNAT --to-source $interfaceip
+	sudo service iptables save
 }
 
 wireguard_install
