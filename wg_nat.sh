@@ -15,9 +15,8 @@ wireguard_install(){
     fi
     #sudo add-apt-repository -y ppa:wireguard/wireguard
     sudo apt-get update -y
-    sudo apt-get install -y wireguard curl iptables
-    sudo apt-get install -y resolvconf
-    
+    sudo apt-get install -y resolvconf wireguard curl iptables net-tools iptables-persistent
+    sudo systemctl enable netfilter-persistent.service
     sudo echo net.ipv4.ip_forward = 1 >> /etc/sysctl.conf
     sysctl -p
     echo "1"> /proc/sys/net/ipv4/ip_forward
@@ -106,7 +105,7 @@ port_forward(){
 	sudo iptables -t nat -I PREROUTING -d $interfaceip -p tcp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
 	sudo iptables -t nat -I PREROUTING -d $interfaceip -p udp -m multiport ! --dports 22,1080,8080,16000 -j DNAT --to-destination 10.0.0.2
 	sudo iptables -t nat -I POSTROUTING -s 10.0.0.2 -j SNAT --to-source $interfaceip
-	sudo service iptables save
+	sudo netfilter-persistent  save
 }
 
 wireguard_install
