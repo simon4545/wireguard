@@ -26,7 +26,7 @@ wireguard_install(){
     c1=$(cat cprivatekey)
     c2=$(cat cpublickey)
     serverip=$(curl ipv4.icanhazip.com)
-    port=16000
+    port=8080
     eth=$(ls /sys/class/net | awk '/^e/{print}')
 
 sudo cat > /etc/wireguard/wg0.conf <<-EOF
