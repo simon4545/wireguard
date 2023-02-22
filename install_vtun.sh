@@ -4,7 +4,7 @@ apt install net-tools
 curl -sL https://mirrors.ustc.edu.cn/nodesource/deb/setup_16.x | bash -
 apt-get install -y nodejs
 npm i -g pm2
-pm2 start ./vtun-linux-amd64 -- -S -l :16000 -p ws -path /wplogin -c 10.0.0.1/24 -k asdfasdf110 -v
+pm2 start ./vtun-linux-amd64 -- -S -l :16000 -obfs -p ws -path /wplogin -c 10.0.0.1/24 -k asdfasdf110 -v
 
 
 echo net.ipv4.ip_forward = 1 >> /etc/sysctl.conf
